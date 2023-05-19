@@ -6,7 +6,6 @@ const morgan = require('morgan')
 app.use(morgan('tiny'))
 app.use(express.static('build'))
 app.use(express.json())
-app.use(requestLogger)
 const cors = require('cors')
 app.use(cors())
 

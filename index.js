@@ -16,31 +16,17 @@ app.get('/api/contacts', (request, response) => {
     })
 
 })
-//fetching date and number of contacts in our phonebook via a get request
-app.get('/api/info', (request, response) => {
-    let contact_length = contacts.length
-    let date = new Date()
-    response.send(`Phonebook has info for ${contact_length} peoples <p>${date}</p>`)
-
-})
 //fetching single contact info to our phonebook via get request
 app.get('/api/contacts/:id', (request, response) => {
     Person.findById(request.params.id).then(person => {
         response.json(person)
     })
 })
-//deleting contact to our phonebook via delete request
-
-app.delete('/api/contacts/:id', (request, response) => {
-    const id = Number(request.params.id)
-    contacts = contacts.filter(contact => contact.id !== id)
-    response.status(204).end()
-})
 //sending data to our phonebook via post request
 app.post('/api/contacts/', (request, response) => {
     const body = request.body
 
-    if (body.content === undefined) {
+    if (body.name === undefined) {
         return response.status(400).json({ error: 'content missing' })
     }
 

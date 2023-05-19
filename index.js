@@ -4,10 +4,12 @@ const app = express()
 const Person = require('./models/person')
 const morgan = require('morgan')
 app.use(morgan('tiny'))
-app.use(express.json())
 app.use(express.static('build'))
+app.use(express.json())
+app.use(requestLogger)
 const cors = require('cors')
 app.use(cors())
+
 
 //fetching all contacts to our phonebook via a get request
 app.get('/api/contacts', (request, response) => {
@@ -25,17 +27,16 @@ app.get('/api/contacts/:id', (request, response) => {
             response.status(404).end()
         }
     })
-        .catch(error => {
-            console.log(error)
-            response.status(400).send({ error: 'malformatted id' })
-        })
+        .catch(error => next(error))
 })
 //deleting contact to our phonebook via delete request
 
 app.delete('/api/contacts/:id', (request, response) => {
-    const id = Number(request.params.id)
-    contacts = contacts.filter(contact => contact.id !== id)
-    response.status(204).end()
+    Person.findByIdAndRemove(request.params.id)
+        .then(person => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 })
 //sending data to our phonebook via post request
 app.post('/api/contacts/', (request, response) => {
@@ -54,6 +55,26 @@ app.post('/api/contacts/', (request, response) => {
         response.json(savedperson)
     })
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+// handler of requests with unknown endpoint
+app.use(unknownEndpoint)
+
+//Error handler declaration
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+//use of error handler middleware
+app.use(errorHandler)
 const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

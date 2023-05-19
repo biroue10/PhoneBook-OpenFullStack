@@ -12,8 +12,8 @@ app.use(cors())
 //fetching all contacts to our phonebook via a get request
 app.get('/api/contacts', (request, response) => {
     Person.find({}).then(persons => {
-        if (person) {
-            response.json(person)
+        if (persons) {
+            response.json(persons)
         }
         else {
             response.status(404).end()

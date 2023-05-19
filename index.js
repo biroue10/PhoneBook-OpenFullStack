@@ -43,7 +43,7 @@ app.get('/api/contacts', (request, response) => {
 })
 
 //fetching single contact info to our phonebook via get request
-app.get('/api/contacts/:id', (request, response) => {
+app.get('/api/contacts/:id', (request, response, next) => {
     Person.findById(request.params.id).then(person => {
         if (person) {
             response.json(person)
@@ -55,7 +55,7 @@ app.get('/api/contacts/:id', (request, response) => {
 })
 //deleting contact to our phonebook via delete request
 
-app.delete('/api/contacts/:id', (request, response) => {
+app.delete('/api/contacts/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
         .then(person => {
             response.status(204).end()

@@ -5,7 +5,6 @@ const cors = require('cors')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 const morgan = require('morgan')
-const Person = require('./models/person')
 const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method)
     logger.info('Path:  ', request.path)

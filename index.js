@@ -41,6 +41,17 @@ app.get('/api/contacts', (request, response) => {
     })
 
 })
+//fetching info contact to our phonebook via a get request
+
+app.get('/api/info', (request, response) => {
+    const date = new Date()
+    Person.find({}).then(persons => {
+        let taille = persons.length
+        response.send(`${date}<br/>There are ${taille} contacts in our phonebook`)
+    })
+
+
+})
 
 //fetching single contact info to our phonebook via get request
 app.get('/api/contacts/:id', (request, response, next) => {
@@ -79,8 +90,6 @@ app.post('/api/contacts/', (request, response) => {
         response.json(savedperson)
     })
 })
-
-
 // handler of requests with unknown endpoint
 app.use(unknownEndpoint)
 //use of error handler middleware

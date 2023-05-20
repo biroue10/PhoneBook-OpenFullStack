@@ -2,22 +2,19 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-require('dotenv').config()
+const config = require('./utils/config')
+const logger = require('./utils/logger')
 const morgan = require('morgan')
-
 const Person = require('./models/person')
-
 const requestLogger = (request, response, next) => {
-    console.log('Method:', request.method)
-    console.log('Path:  ', request.path)
-    console.log('Body:  ', request.body)
-    console.log('---')
+    logger.info('Method:', request.method)
+    logger.info('Path:  ', request.path)
+    logger.info('Body:  ', request.body)
+    logger.info('---')
     next()
 }
-
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-
+    logger.error(error.message)
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
     }
@@ -95,6 +92,6 @@ app.use(unknownEndpoint)
 //use of error handler middleware
 app.use(errorHandler)
 const PORT = process.env.PORT
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+app.listen(config.PORT, () => {
+    logger.info(`Server running on port ${PORT}`)
 })

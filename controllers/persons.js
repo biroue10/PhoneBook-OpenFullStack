@@ -57,3 +57,5 @@ personsRouter.post('/api/contacts/', (request, response) => {
         response.json(savedperson)
     })
 })
+
+module.exports = personsRouter
